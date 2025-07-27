@@ -3,6 +3,16 @@ from app.models.user_subscription import UserSubscription
 from app.extensions import db
 
 class SubscriptionRepository:
+    """
+    Repository for performing optimized database operations on UserSubscription table.
+
+    Optimization Highlights:
+    -------------------------
+    1. Custom SQL with parameter binding avoids ORM overhead and is faster for large datasets.
+    2. Indexed columns (`user_id`, `end_date`, `start_date`) allow efficient filtering and sorting.
+    3. Composite indexes (e.g., `user_id` + `end_date`) directly match query filters.
+    4. Sorted queries use the same columns as indexes → minimizes disk I/O and CPU sort.
+    """
     @staticmethod
     def create_subscription(user_id, plan_id):
         subscription = UserSubscription(user_id=user_id, plan_id=plan_id)
@@ -36,6 +46,15 @@ class SubscriptionRepository:
 
     @staticmethod
     def list_all_subscriptions(user_id):
+        """
+        Get all subscriptions for a user ordered by start date descending.
+        
+        Performance Optimized:
+        - Uses `user_id` and `start_date` index (idx_user_start_date).
+        - Efficient for dashboards or subscription timelines.
+
+        Returns: List of subscription rows (id, plan_id, start_date, end_date).
+        """
         sql = text("""
             SELECT id, plan_id, start_date, end_date
             FROM user_subscription
@@ -46,6 +65,19 @@ class SubscriptionRepository:
 
     @staticmethod
     def get_subscription_history(user_id):
+        """
+        Get all **ended** subscriptions for a user, ordered by end date descending.
+
+        Performance Optimized:
+        - Filters by `user_id` and `end_date IS NOT NULL`.
+        - Leverages composite index: (user_id, end_date) → speeds up both filtering & sorting.
+
+        Why filter `end_date IS NOT NULL`?
+        - Only subscriptions with an end date are considered "past" or "historical".
+        - This avoids mixing in current/active subscriptions.
+
+        Returns: List of past subscription rows (id, plan_id, start_date, end_date).
+        """
         sql = text("""
             SELECT id, plan_id, start_date, end_date
             FROM user_subscription

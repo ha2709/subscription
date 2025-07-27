@@ -16,6 +16,8 @@ class UserSubscription(db.Model):
             db.Index('idx_user_active', 'user_id', 'is_active'),
             db.Index('idx_user_start_date', 'user_id', 'start_date'),
             db.Index('idx_user_plan', 'user_id', 'plan_id'),
+            db.Index('idx_user_end_date', 'user_id', 'end_date')
+
         )
     # Relationships
     user = db.relationship("User", back_populates="subscriptions")    

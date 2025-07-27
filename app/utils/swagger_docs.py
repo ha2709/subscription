@@ -134,3 +134,98 @@ subscription_history_doc = {
         }
     }
 }
+
+register_user_doc = {
+    "tags": ["Auth"],
+    "summary": "Register a new user",
+    "description": "Register a new user with email and password. Returns the user ID and email on success.",
+    "parameters": [
+        {
+            "name": "body",
+            "in": "body",
+            "required": True,
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "example": "user@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "StrongPassword123!"
+                    }
+                },
+                "required": ["email", "password"]
+            }
+        }
+    ],
+    "responses": {
+        200: {
+            "description": "User registered successfully",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "id": {"type": "integer", "example": 1},
+                    "email": {"type": "string", "example": "user@example.com"}
+                }
+            }
+        },
+        400: {
+            "description": "Invalid input or user already exists",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "message": {"type": "string", "example": "Email already exists"}
+                }
+            }
+        }
+    }
+}
+login_user_doc = {
+    "tags": ["Auth"],
+    "summary": "Login a user",
+    "description": "Authenticate a user with email and password. Returns a JWT access token on success.",
+    "parameters": [
+        {
+            "name": "body",
+            "in": "body",
+            "required": True,
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "example": "user@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "StrongPassword123!"
+                    }
+                },
+                "required": ["email", "password"]
+            }
+        }
+    ],
+    "responses": {
+        200: {
+            "description": "Login successful",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "access_token": {"type": "string", "example": "eyJ0eXAiOiJKV1QiLCJhbGciOi..."}
+                }
+            }
+        },
+        401: {
+            "description": "Invalid email or password",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "error": {"type": "string", "example": "Invalid username or password"}
+                }
+            }
+        }
+    }
+}
+

@@ -22,3 +22,14 @@ Body → raw → JSON:
   "email": "testuser@example.com",
   "password": "securepassword"
 }
+
+
+Database Optimization Strategy
+
+SQLAlchemy Core used for performance-critical queries
+
+Composite indexes created on columns used in WHERE and ORDER BY clauses
+
+Avoided ORM .query.filter() when bulk read speed matters
+
+Indexed filtered columns like end_date IS NOT NULL to enable fast access to historical data
