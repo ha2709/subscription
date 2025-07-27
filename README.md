@@ -10,6 +10,9 @@
 flask db init
 flask db migrate
 flask db upgrade
+export PYTHONPATH=$(pwd)
+export FLASK_APP=main.py
+flask db migrate -m "Initial migration"
 
 http://127.0.0.1:5000/api/auth/register
 

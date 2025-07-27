@@ -18,8 +18,8 @@ class UserSubscription(db.Model):
             db.Index('idx_user_plan', 'user_id', 'plan_id'),
         )
     # Relationships
-    user = db.relationship("User", backref="subscriptions", lazy="joined")
-    plan = db.relationship("Plan", backref="subscriptions", lazy="joined")
+    user = db.relationship("User", back_populates="subscriptions")    
+    plan = db.relationship("Plan", back_populates="subscriptions")
 
 
 

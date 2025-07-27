@@ -1,3 +1,4 @@
+from sqlalchemy.sql import text
 from app.models.user_subscription import UserSubscription
 from app.extensions import db
 
@@ -26,7 +27,7 @@ class SubscriptionRepository:
     def get_active_subscription(user_id):
         sql = text("""
             SELECT id, user_id, plan_id, start_date, end_date
-            FROM subscriptions
+            FROM user_subscription
             WHERE user_id = :user_id
               AND end_date IS NULL
             LIMIT 1
@@ -37,7 +38,7 @@ class SubscriptionRepository:
     def list_all_subscriptions(user_id):
         sql = text("""
             SELECT id, plan_id, start_date, end_date
-            FROM subscriptions
+            FROM user_subscription
             WHERE user_id = :user_id
             ORDER BY start_date DESC
         """)
@@ -47,7 +48,7 @@ class SubscriptionRepository:
     def get_subscription_history(user_id):
         sql = text("""
             SELECT id, plan_id, start_date, end_date
-            FROM subscriptions
+            FROM user_subscription
             WHERE user_id = :user_id
               AND end_date IS NOT NULL
             ORDER BY end_date DESC

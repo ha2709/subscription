@@ -1,4 +1,3 @@
-# app/routes/user.py
 from flask import Blueprint, request, jsonify
 from werkzeug.exceptions import HTTPException
 from app.services.user_service import UserService
@@ -88,9 +87,16 @@ def login():
     try:
         data = request.get_json()
         user = UserService.login(data['email'], data['password'])
-        if user and user.password == data["password"]:
-            access_token = create_access_token(identity=user.id)
-            return jsonify(access_token=access_token)
+        if user and user.check_password(data["password"]):
+          # Successful login
+          
+          access_token = create_access_token(identity=str(user.id))
+          return jsonify(access_token=access_token), 200
+          # return jsonify({"message": "Login successful", "user_id": user.id}), 200
+        else:
+            return jsonify({"error": "Invalid username or password"}), 401
+ 
+   
         return jsonify({"msg": "Bad credentials"}), 401
         # return jsonify({'message': 'Login successful', 'user_id': user.id})
     except HTTPException as e:

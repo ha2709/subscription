@@ -1,4 +1,3 @@
-# app/services/plan_service.py
 from app.repositories.plan_repository import PlanRepository
 
 class PlanService:
