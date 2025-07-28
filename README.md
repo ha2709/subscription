@@ -9,7 +9,7 @@ A Flask-based RESTful API for managing user subscriptions with performance-focus
 ### 📦 Installation
 
 ```bash
-git clone https://github.com/yourusername/subscription-api.git
+git clone https://github.com/ha2709/subscription.git
 cd subscription-api
 python -m venv env
 source env/bin/activate
