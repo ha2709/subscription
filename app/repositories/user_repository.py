@@ -5,7 +5,7 @@ class UserRepository:
     @staticmethod
     def create_user(email, password):
         user = User(email=email)
-        user.set_password(password)
+        user.password = password 
         db.session.add(user)
         db.session.commit()
         return user

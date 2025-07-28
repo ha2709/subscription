@@ -14,7 +14,7 @@ from app.utils.swagger_docs import (
 )
 
 logger = setup_logger("subscription", "logs/subscription.log")
-bp = Blueprint('subscriptions', __name__, )
+bp = Blueprint('subscriptions', __name__, url_prefix='/subscriptions')
 
 
 @bp.route('/', methods=['GET'])
@@ -79,11 +79,27 @@ def upgrade(subscription_id):
 @log_execution
 @swag_from(active_subscription_doc)
 def active_subscription():
+    print(" Reached /api/subscriptions/active")
     user_id = get_jwt_identity()
-    logger.info("Fetching active subscription", extra={"user_id": user_id})
+    print(84, user_id)
+    # logger.info("Fetching active subscription", extra={"user_id": user_id})
     sub = SubscriptionService.get_active_subscription(user_id)
+ 
+
+    print(86, sub)
+
     if sub:
-        return jsonify(dict(sub))
+        sub_id, user_id, plan_id, start_date, end_date = sub
+        return jsonify({
+            "id": sub_id,
+            "user_id": user_id,
+            "plan_id": plan_id,
+            "start_date": start_date,  # already string
+            "end_date": end_date       # already string or None
+        })
+
+
+
     return jsonify({"message": "No active subscription"}), 404
 
 

@@ -33,3 +33,7 @@ Composite indexes created on columns used in WHERE and ORDER BY clauses
 Avoided ORM .query.filter() when bulk read speed matters
 
 Indexed filtered columns like end_date IS NOT NULL to enable fast access to historical data
+
+pytest -v tests/
+pytest -v tests/test_subscription.py
+
