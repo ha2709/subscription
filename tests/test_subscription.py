@@ -67,13 +67,13 @@ def test_create_subscription(client):
 def test_active_subscription(client):
     with client.application.app_context():
         user, token = create_user_and_token(client.application)
-        print(70, token)
+    
         print("Available routes:")
         for rule in client.application.url_map.iter_rules():
             print(f"{rule.endpoint:30s} {rule.methods} {rule.rule}")
 
         plan = create_plan(client.application)
-        print(57, plan)
+     
         sub = UserSubscription(
             user_id=user.id, 
             plan_id=plan, 
@@ -84,12 +84,12 @@ def test_active_subscription(client):
  
         db.session.add(sub)
         db.session.commit()
-        print(75, sub)
+   
         response = client.get(
             "api/subscriptions/active",
             headers={"Authorization": f"Bearer {token}"}
         )
-        print(78, response)
+   
         assert response.status_code == 200
         data = response.get_json()
         assert data['plan_id'] == plan

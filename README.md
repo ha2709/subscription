@@ -1,3 +1,21 @@
+# Subscription API
+
+A Flask-based RESTful API for managing user subscriptions with performance-focused database optimizations.
+
+---
+
+## 🚀 Getting Started
+
+### 📦 Installation
+
+```bash
+git clone https://github.com/yourusername/subscription-api.git
+cd subscription-api
+python -m venv env
+source env/bin/activate
+pip install -r requirements.txt
+```
+
 ### Optimization Highlights
 - Raw SQL for performance-critical subscription queries (avoids ORM overhead).
 - Indexed `user_id` and `is_active` to speed up lookups.
@@ -37,3 +55,10 @@ Indexed filtered columns like end_date IS NOT NULL to enable fast access to hist
 pytest -v tests/
 pytest -v tests/test_subscription.py
 
+📊 Performance Example
+
+Index: it takes 0.3 ms <img src="images/index.png" width="400"/> 
+
+Without Index , it takes 22 ms <img src="images/without-index.png" width="400"/>
+
+Comparison of subscription query performance with and without proper indexing.

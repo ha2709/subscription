@@ -1,4 +1,5 @@
-from app import db, create_app
+from main import create_app
+from app.extensions import db 
 from app.repositories.subscription_repository import SubscriptionRepository
 import time
 

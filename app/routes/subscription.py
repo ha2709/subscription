@@ -25,7 +25,7 @@ def list_subscriptions():
     user_id = get_jwt_identity()
     logger.info("Listing subscriptions", extra={"user_id": user_id})
     subs = SubscriptionService.list_subscriptions(user_id)
-    print(28, subs)
+  
     return jsonify([
     {
         "id": row[0],
@@ -45,7 +45,7 @@ def subscribe():
 
     data = request.get_json()
     user_id = get_jwt_identity()
-    print(38, user_id)
+   
     logger.info("Creating subscription", extra={"user": f"user:{user_id}", "plan_id": data.get("plan_id")})
     sub = SubscriptionService.create_subscription(user_id, data['plan_id'])
     return jsonify({'id': sub.id, 'user_id': sub.user_id, 'plan_id': sub.plan_id})
@@ -79,14 +79,11 @@ def upgrade(subscription_id):
 @log_execution
 @swag_from(active_subscription_doc)
 def active_subscription():
-    print(" Reached /api/subscriptions/active")
+  
     user_id = get_jwt_identity()
-    print(84, user_id)
-    # logger.info("Fetching active subscription", extra={"user_id": user_id})
-    sub = SubscriptionService.get_active_subscription(user_id)
  
-
-    print(86, sub)
+    logger.info("Fetching active subscription", extra={"user_id": user_id})
+    sub = SubscriptionService.get_active_subscription(user_id) 
 
     if sub:
         sub_id, user_id, plan_id, start_date, end_date = sub
@@ -111,7 +108,7 @@ def active_subscription():
 @swag_from(subscription_history_doc)
 def subscription_history():
     user_id = get_jwt_identity()
-    print(98, user_id)
+ 
     logger.info("Fetching subscription history", extra={"user_id": user_id})
     subs = SubscriptionService.get_subscription_history(user_id)
     return jsonify([

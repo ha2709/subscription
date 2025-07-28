@@ -37,25 +37,27 @@ def setup_logger(name: str, log_file: str, level=logging.INFO):
     logger.propagate = False
 
     return logger
-
 def log_execution(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         if logger is None:
             raise RuntimeError("Logger not initialized. Call setup_logger() first.")
-        
+
         start = time.time()
-        extra = {"user": "anonymous"}  # Default user
+        user_id = 'system'  # Default fallback
+        params = {}
 
         if request:
             try:
                 params = request.get_json(silent=True) or request.args.to_dict()
-                extra["params"] = params
-                extra["user"] = getattr(request, 'user', 'anonymous')  # Customize if user info is available
+                user_id = getattr(request, 'user', 'anonymous')  # You can modify this if you have a `current_user` or JWT
             except Exception:
-                params = {}
-        else:
-            params = {}
+                pass
+
+        extra = {
+            "user_id": user_id,
+            "params": params
+        }
 
         logger.info(f"Calling {func.__name__}", extra=extra)
         result = func(*args, **kwargs)
@@ -63,3 +65,4 @@ def log_execution(func):
         logger.info(f"Executed {func.__name__} in {duration:.2f} ms", extra=extra)
         return result
     return wrapper
+
