@@ -7,16 +7,28 @@ class SubscriptionService:
 
     @staticmethod
     def cancel_subscription(subscription_id: int):
-        return SubscriptionRepository.cancel_subscription(subscription_id)
+        return SubscriptionRepository.cancel_subscription(subscription_id) 
 
     @staticmethod
-    def get_active_subscription(user_id):
-        return SubscriptionRepository.get_active_subscription(user_id)
+    def list_all_subscriptions(user_id, page, page_size):
+        return SubscriptionRepository.get_paginated_subscriptions(user_id, page, page_size)
 
     @staticmethod
-    def list_subscriptions(user_id):
-        return SubscriptionRepository.list_all_subscriptions(user_id)
+    def count_subscriptions(user_id):
+        return SubscriptionRepository.count_subscriptions(user_id)
 
     @staticmethod
-    def get_subscription_history(user_id):
-        return SubscriptionRepository.get_subscription_history(user_id)
+    def get_subscription_history(user_id, page, page_size):
+        return SubscriptionRepository.get_paginated_subscription_history(user_id, page, page_size)
+
+    @staticmethod
+    def count_subscription_history(user_id):
+        return SubscriptionRepository.count_subscription_history(user_id)
+
+    @staticmethod
+    def get_active_subscriptions(user_id, page, page_size):
+        return SubscriptionRepository.get_active_subscriptions_paginated(user_id, page, page_size)
+
+    @staticmethod
+    def count_active_subscriptions(user_id):
+        return SubscriptionRepository.count_active_subscriptions(user_id)

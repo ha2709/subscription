@@ -27,62 +27,81 @@ class SubscriptionRepository:
             sub.is_active = False
             db.session.commit()
         return sub
-
-    @staticmethod
-    def get_user_active_subscription(user_id):
-        return UserSubscription.query.filter_by(user_id=user_id, is_active=True).first()
-
     
     @staticmethod
-    def get_active_subscription(user_id):
-        sql = text("""
-            SELECT id, user_id, plan_id, start_date, end_date
-            FROM user_subscription
-            WHERE user_id = :user_id
-              AND end_date IS NULL
-            LIMIT 1
-        """)
-        return db.session.execute(sql, {'user_id': user_id}).fetchone()
-
-    @staticmethod
-    def list_all_subscriptions(user_id):
-        """
-        Get all subscriptions for a user ordered by start date descending.
-        
-        Performance Optimized:
-        - Uses `user_id` and `start_date` index (idx_user_start_date).
-        - Efficient for dashboards or subscription timelines.
-
-        Returns: List of subscription rows (id, plan_id, start_date, end_date).
-        """
+    def get_paginated_subscriptions(user_id, page, page_size):
+        offset = (page - 1) * page_size
         sql = text("""
             SELECT id, plan_id, start_date, end_date
             FROM user_subscription
             WHERE user_id = :user_id
             ORDER BY start_date DESC
+            LIMIT :limit OFFSET :offset
         """)
-        return db.session.execute(sql, {'user_id': user_id}).fetchall()
+        return db.session.execute(sql, {
+            'user_id': user_id,
+            'limit': page_size,
+            'offset': offset
+        }).fetchall()
 
     @staticmethod
-    def get_subscription_history(user_id):
-        """
-        Get all **ended** subscriptions for a user, ordered by end date descending.
+    def count_subscriptions(user_id):
+        sql = text("""
+            SELECT COUNT(*) FROM user_subscription WHERE user_id = :user_id
+        """)
+        result = db.session.execute(sql, {'user_id': user_id}).scalar()
+        return result
 
-        Performance Optimized:
-        - Filters by `user_id` and `end_date IS NOT NULL`.
-        - Leverages composite index: (user_id, end_date) → speeds up both filtering & sorting.
-
-        Why filter `end_date IS NOT NULL`?
-        - Only subscriptions with an end date are considered "past" or "historical".
-        - This avoids mixing in current/active subscriptions.
-
-        Returns: List of past subscription rows (id, plan_id, start_date, end_date).
-        """
+    @staticmethod
+    def get_paginated_subscription_history(user_id, page, page_size):
+        offset = (page - 1) * page_size
         sql = text("""
             SELECT id, plan_id, start_date, end_date
             FROM user_subscription
-            WHERE user_id = :user_id
-              AND end_date IS NOT NULL
+            WHERE user_id = :user_id AND end_date IS NOT NULL
             ORDER BY end_date DESC
+            LIMIT :limit OFFSET :offset
         """)
-        return db.session.execute(sql, {'user_id': user_id}).fetchall()
+        return db.session.execute(sql, {
+            'user_id': user_id,
+            'limit': page_size,
+            'offset': offset
+        }).fetchall()
+
+    @staticmethod
+    def count_subscription_history(user_id):
+        sql = text("""
+            SELECT COUNT(*) FROM user_subscription
+            WHERE user_id = :user_id AND end_date IS NOT NULL
+        """)
+        return db.session.execute(sql, {'user_id': user_id}).scalar()
+    
+    @staticmethod
+    def get_active_subscriptions_paginated(user_id, page=1, page_size=10):
+        offset = (page - 1) * page_size
+
+        query = text("""
+            SELECT id, plan_id, start_date, end_date
+            FROM user_subscription
+            WHERE user_id = :user_id
+              AND is_active = TRUE
+            ORDER BY start_date DESC
+            LIMIT :limit OFFSET :offset
+        """)
+        result = db.session.execute(query, {
+            'user_id': user_id,
+            'limit': page_size,
+            'offset': offset
+        }).fetchall()
+
+        return result
+
+    @staticmethod
+    def count_active_subscriptions(user_id):
+        sql = text("""
+            SELECT COUNT(*) FROM user_subscription
+            WHERE user_id = :user_id AND is_active = true
+        """)
+        return db.session.execute(sql, {'user_id': user_id}).scalar()
+    
+   

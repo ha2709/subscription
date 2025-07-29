@@ -76,6 +76,16 @@ Body → raw → JSON:
 
 - Composite indexes on user_id, is_active, plan_id, and start_date.
 
+- Pagination + Total Count Separation:
+
+   - Read endpoints use two optimized queries:
+
+   - One for paginated data (LIMIT, OFFSET)
+
+   - One for total row count using COUNT(*)
+
+   - This avoids full table scans and keeps pagination fast even on large datasets.
+
 - Used LIMIT 1 where only one row is needed to minimize data scan.
 
 - Bulk operations with batched inserts/updates for large data handling.
@@ -88,8 +98,6 @@ Body → raw → JSON:
 
 - Composite indexes match WHERE and ORDER BY usage in queries.
  
-pytest -v tests/
-pytest -v tests/test_subscription.py
 
 ## Performance Example
 

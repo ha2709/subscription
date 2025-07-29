@@ -23,18 +23,21 @@ bp = Blueprint('subscriptions', __name__, url_prefix='/subscriptions')
 @swag_from(list_subscriptions_doc)
 def list_subscriptions():
     user_id = get_jwt_identity()
-    logger.info("Listing subscriptions", extra={"user_id": user_id})
-    subs = SubscriptionService.list_subscriptions(user_id)
-  
-    return jsonify([
-    {
-        "id": row[0],
-        "user_id": row[1],
-        "created_at": row[2].isoformat() if row[2] else None,
-        "ended_at": row[3].isoformat() if row[3] else None
-    }
-    for row in subs
-])
+    page = int(request.args.get('page', 1))
+    page_size = int(request.args.get('page_size', 10))
+
+    subscriptions = SubscriptionService.list_all_subscriptions(user_id, page, page_size)
+    total = SubscriptionService.count_subscriptions(user_id)
+
+    logger.info("Fetching active subscription", extra={"user_id": user_id})
+     
+    return jsonify({
+        'subscriptions': [dict(row) for row in subscriptions],
+        'total': total,
+        'page': page,
+        'page_size': page_size
+    })
+
 
 
 @bp.route('/', methods=['POST'])
@@ -79,28 +82,20 @@ def upgrade(subscription_id):
 @log_execution
 @swag_from(active_subscription_doc)
 def active_subscription():
-  
     user_id = get_jwt_identity()
- 
-    logger.info("Fetching active subscription", extra={"user_id": user_id})
-    sub = SubscriptionService.get_active_subscription(user_id) 
+    page = int(request.args.get('page', 1))
+    page_size = int(request.args.get('page_size', 10))
 
-    if sub:
-        sub_id, user_id, plan_id, start_date, end_date = sub
-        return jsonify({
-            "id": sub_id,
-            "user_id": user_id,
-            "plan_id": plan_id,
-            "start_date": start_date,  # already string
-            "end_date": end_date       # already string or None
-        })
+    active_subs = SubscriptionService.get_active_subscriptions(user_id, page, page_size)
+    total = SubscriptionService.count_active_subscriptions(user_id)
 
-
-
-    return jsonify({"message": "No active subscription"}), 404
-
-
-
+    return jsonify({
+        'active_subscriptions': [dict(row) for row in active_subs],
+        'total': total,
+        'page': page,
+        'page_size': page_size
+    })
+    
 
 @bp.route('/history', methods=['GET'])
 @jwt_required()
@@ -108,17 +103,17 @@ def active_subscription():
 @swag_from(subscription_history_doc)
 def subscription_history():
     user_id = get_jwt_identity()
- 
-    logger.info("Fetching subscription history", extra={"user_id": user_id})
-    subs = SubscriptionService.get_subscription_history(user_id)
-    return jsonify([
-        {
-            "id": row[0],
-            "user_id": row[1],
-            "created_at": row[2].isoformat() if row[2] else None,
-            "ended_at": row[3].isoformat() if row[3] else None
-        }
-        for row in subs
-    ])
+    page = int(request.args.get('page', 1))
+    page_size = int(request.args.get('page_size', 10))
+
+    history = SubscriptionService.get_subscription_history(user_id, page, page_size)
+    total = SubscriptionService.count_subscription_history(user_id)
+
+    return jsonify({
+        'history': [dict(row) for row in history],
+        'total': total,
+        'page': page,
+        'page_size': page_size
+    })
 
  
