@@ -1,4 +1,8 @@
 from flask import Flask
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 from app.config import Config
 from app.extensions import db, bcrypt, jwt, migrate
 from flasgger import Swagger

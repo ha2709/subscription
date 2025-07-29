@@ -5,8 +5,7 @@ COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Optional: install curl for wait-for-it or debugging
-RUN apt-get update && apt-get install -y curl && apt-get clean
+
 
 # Environment setup
 ENV PYTHONUNBUFFERED=1
