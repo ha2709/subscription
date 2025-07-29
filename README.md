@@ -24,12 +24,30 @@ export FLASK_APP=main.py
 ```
 
 ### Database Setup
+ 
+This project uses PostgreSQL. Default connection:
+ 
+`postgresql+psycopg2://postgres:postgres@localhost:5432/subscription`
 
+### Steps
+
+- Start PostgreSQL and create the database:
+
+```bash
+psql -U postgres
+CREATE DATABASE subscription;
 ```
-flask db init
+
+- Run migrations:
+ 
+```bash
 flask db migrate -m "Initial migration"
 flask db upgrade
 ```
+
+- Seed data:
+ 
+`python scripts/seed_subscriptions.py`
 
 ### Run Application
 
@@ -116,3 +134,6 @@ Includes:
 - Enable rate-limiting or API key for production use
 
 - Deploy to Docker/Kubernetes
+
+- Enum Mapping for Plan ID
+
