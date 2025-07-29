@@ -35,7 +35,7 @@ def create_app(config_override=None):
         return {"message": "Hello, World!"}, 200
 
     return app
-
+app = create_app()
 if __name__ == "__main__":
-    app = create_app()
+    
     app.run(debug=True)

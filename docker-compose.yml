@@ -16,20 +16,21 @@ services:
   api:
     build: .
     command: flask run --host=0.0.0.0 --port=5000
-    working_dir: /app
+ 
     env_file:
       - .env
     ports:
       - "5000:5000"
     depends_on:
       - db
+    working_dir: /code
     volumes:
-      - .:/app
+      - .:/code
     environment:
       # Environment setup
-      PYTHONUNBUFFERED: 1
-      PYTHONPATH: /app
+      PYTHONUNBUFFERED: 1       
       FLASK_APP: main:app
+      PYTHONPATH: /code  
       FLASK_RUN_HOST: 0.0.0.0
       FLASK_RUN_PORT: 5000
 

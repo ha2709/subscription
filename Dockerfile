@@ -1,18 +1,9 @@
 FROM python:3.11-slim
 
-WORKDIR /app
+WORKDIR /code
 COPY . .
 
-RUN pip install --no-cache-dir -r requirements.txt
-
-
-
-# Environment setup
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONPATH=/app
-ENV FLASK_APP=main:app
-ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_RUN_PORT=5000
+RUN pip install -r requirements.txt
 
 EXPOSE 5000
 CMD ["python", "main.py"]
