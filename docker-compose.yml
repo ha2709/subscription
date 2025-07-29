@@ -1,29 +1,29 @@
 version: "3.9"
+
 services:
   db:
-    image: mysql:8.0
+    image: postgres:15
     restart: always
     environment:
-      MYSQL_DATABASE: subscription
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: rootpass
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: subscription_db
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - db_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
 
   api:
     build: .
-    depends_on:
-      - db
+    command: flask run --host=0.0.0.0 --port=5000
+    env_file:
+      - .env
     ports:
       - "5000:5000"
-    environment:
-      DATABASE_URI: mysql+pymysql://user:password@db/subscription
-      JWT_SECRET_KEY: super-secret
+    depends_on:
+      - db
     volumes:
       - .:/app
 
 volumes:
-  db_data:
+  postgres_data:
