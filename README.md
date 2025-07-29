@@ -55,6 +55,12 @@ flask db upgrade
 
 Server will run at: http://127.0.0.1:5000
 
+### Run with Docker
+
+```docker build -t subscription .
+docker run -p 5000:5000 subscription
+```
+
 ## API Endpoints
 
 ### Register a New User
