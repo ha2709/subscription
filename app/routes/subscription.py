@@ -30,9 +30,17 @@ def list_subscriptions():
     total = SubscriptionService.count_subscriptions(user_id)
 
     logger.info("Fetching active subscription", extra={"user_id": user_id})
-     
+    print(33, subscriptions)
     return jsonify({
-        'subscriptions': [dict(row) for row in subscriptions],
+        'subscriptions': [
+            {
+                'id': row[0],
+                'user_id': row[1],
+                'created_at': row[2],
+                'deleted_at': row[3],
+            }
+            for row in subscriptions
+        ],
         'total': total,
         'page': page,
         'page_size': page_size
@@ -90,7 +98,15 @@ def active_subscription():
     total = SubscriptionService.count_active_subscriptions(user_id)
 
     return jsonify({
-        'active_subscriptions': [dict(row) for row in active_subs],
+        'active_subscriptions':[
+            {
+                'id': row[0],
+                'user_id': row[1],
+                'created_at': row[2],
+                'deleted_at': row[3],
+            }
+            for row in active_subs
+        ],        
         'total': total,
         'page': page,
         'page_size': page_size
@@ -110,7 +126,16 @@ def subscription_history():
     total = SubscriptionService.count_subscription_history(user_id)
 
     return jsonify({
-        'history': [dict(row) for row in history],
+        'history': [
+            {
+                'id': row[0],
+                'user_id': row[1],
+                'created_at': row[2],
+                'deleted_at': row[3],
+            }
+            for row in history
+        ],
+         
         'total': total,
         'page': page,
         'page_size': page_size
