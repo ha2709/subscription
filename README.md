@@ -63,11 +63,13 @@ POST /api/auth/register
 
 Body → raw → JSON:
 
+```json
 {
   "email": "testuser@example.com",
   "password": "securepassword"
 }
-
+```
+ 
 ## Optimization Highlights
 
 ### Query Optimizations
