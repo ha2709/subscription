@@ -23,6 +23,8 @@ export PYTHONPATH=$(pwd)
 export FLASK_APP=main.py
 ```
 
+Change .env.example to .env
+
 ### Database Setup
  
 This project uses PostgreSQL. Default connection:
@@ -55,12 +57,28 @@ flask db upgrade
 
 Server will run at: http://127.0.0.1:5000
 
-### Run with Docker
+### Run the App with Docker
 
-```
-docker build -t subscription .
-docker run -p 5000:5000 subscription
-```
+#### 1. Build the Docker image:
+ 
+`docker build -t subscription .`
+
+#### 2. Run the container (API will be available at http://localhost:5000):
+
+`docker run -p 5000:5000 subscription`
+
+
+#### 4. (Optional) Seed the database:
+
+Once the container is running and the database is ready, run the following command to seed sample data:
+ 
+`docker exec -it <container_id_or_name> python scripts/seed_subscriptions.py`
+
+Replace <container_id_or_name> with your running container’s ID or name (e.g., subscription-api-1).
+
+You can find it by running:
+ 
+`docker ps`
 
 ## API Endpoints
 
