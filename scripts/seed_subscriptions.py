@@ -53,7 +53,7 @@ def seed_subscriptions():
             db.session.commit()
             print(f"Inserted {i + batch_size}/{total} subscriptions...")
 
-        print("✅ Seeding completed.")
+        print(" Seeding completed.")
 
 if __name__ == "__main__":
     seed_subscriptions()

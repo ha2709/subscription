@@ -30,7 +30,7 @@ def list_subscriptions():
     total = SubscriptionService.count_subscriptions(user_id)
 
     logger.info("Fetching active subscription", extra={"user_id": user_id})
-    print(33, subscriptions)
+  
     return jsonify({
         'subscriptions': [
             {
@@ -56,7 +56,7 @@ def subscribe():
 
     data = request.get_json()
     user_id = get_jwt_identity()
-   
+ 
     logger.info("Creating subscription", extra={"user": f"user:{user_id}", "plan_id": data.get("plan_id")})
     sub = SubscriptionService.create_subscription(user_id, data['plan_id'])
     return jsonify({'id': sub.id, 'user_id': sub.user_id, 'plan_id': sub.plan_id})
