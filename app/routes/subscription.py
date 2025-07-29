@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flasgger import swag_from
 from app.services.subscription_service import SubscriptionService
 from app.utils.logging_config import setup_logger, log_execution
- 
+from app.utils.helpers import format_paginated_response
 from app.utils.swagger_docs import (
     create_subscription_doc,
     cancel_subscription_doc,
@@ -25,26 +25,14 @@ def list_subscriptions():
     user_id = get_jwt_identity()
     page = int(request.args.get('page', 1))
     page_size = int(request.args.get('page_size', 10))
-
+    logger.info("Fetching active subscription", extra={"user_id": user_id})
     subscriptions = SubscriptionService.list_all_subscriptions(user_id, page, page_size)
     total = SubscriptionService.count_subscriptions(user_id)
 
-    logger.info("Fetching active subscription", extra={"user_id": user_id})
-  
-    return jsonify({
-        'subscriptions': [
-            {
-                'id': row[0],
-                'user_id': row[1],
-                'created_at': row[2],
-                'deleted_at': row[3],
-            }
-            for row in subscriptions
-        ],
-        'total': total,
-        'page': page,
-        'page_size': page_size
-    })
+
+    if total == 0:
+        return jsonify({'message': 'No subscriptions found'}), 404
+    return jsonify(format_paginated_response(subscriptions, total, page, page_size))
 
 
 
@@ -96,21 +84,9 @@ def active_subscription():
 
     active_subs = SubscriptionService.get_active_subscriptions(user_id, page, page_size)
     total = SubscriptionService.count_active_subscriptions(user_id)
-
-    return jsonify({
-        'active_subscriptions':[
-            {
-                'id': row[0],
-                'user_id': row[1],
-                'created_at': row[2],
-                'deleted_at': row[3],
-            }
-            for row in active_subs
-        ],        
-        'total': total,
-        'page': page,
-        'page_size': page_size
-    })
+    if total == 0:
+        return jsonify({'message': 'No subscriptions found'}), 404
+    return jsonify(format_paginated_response(active_subs, total, page, page_size))
     
 
 @bp.route('/history', methods=['GET'])
@@ -124,21 +100,8 @@ def subscription_history():
 
     history = SubscriptionService.get_subscription_history(user_id, page, page_size)
     total = SubscriptionService.count_subscription_history(user_id)
-
-    return jsonify({
-        'history': [
-            {
-                'id': row[0],
-                'user_id': row[1],
-                'created_at': row[2],
-                'deleted_at': row[3],
-            }
-            for row in history
-        ],
-         
-        'total': total,
-        'page': page,
-        'page_size': page_size
-    })
+    if total == 0:
+        return jsonify({'message': 'No subscriptions found'}), 404
+    return jsonify(format_paginated_response(history, total, page, page_size))
 
  
