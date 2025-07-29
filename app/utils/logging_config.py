@@ -50,7 +50,7 @@ def log_execution(func):
         if request:
             try:
                 params = request.get_json(silent=True) or request.args.to_dict()
-                user_id = getattr(request, 'user', 'anonymous')  # You can modify this if you have a `current_user` or JWT
+                user_id = getattr(request, 'user', 'anonymous')  
             except Exception:
                 pass
 
