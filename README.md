@@ -137,7 +137,7 @@ Includes:
 
 ## To Do
 
-- Add pagination to /subscriptions endpoint
+- Add pagination to other endpoints
 
 - Enable rate-limiting or API key for production use
 
