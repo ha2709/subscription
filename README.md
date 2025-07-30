@@ -95,6 +95,43 @@ Body → raw → JSON:
 }
 ```
 
+### API Authentication Flow
+
+1. Login to get Access Token
+
+Endpoint:
+
+POST /api/auth/login
+
+Request Body: (JSON format)
+
+```json
+{
+  "email": "john@example.com",
+  "password": "securepassword"
+}
+
+```
+
+Response:
+
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+2. Access Protected Resource
+
+Endpoint:
+
+GET /api/subscriptions
+
+Headers:
+ 
+Authorization: Bearer <access_token>
+
+This token should be copied directly from the login response and pasted into the Authorization tab in your API tool (e.g., Postman or Thunder Client) as a Bearer token.
+
 ### Full API Documentation:
 
 Visit http://127.0.0.1:5000/apidocs/ to view and test all available endpoints.
