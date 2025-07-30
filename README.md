@@ -84,9 +84,11 @@ You can find it by running:
 
 ### Register a New User
 
-POST /api/auth/register
+  - Method: POST
 
-Body → raw → JSON:
+  - Endpoint: /api/auth/register
+
+  - Request Body: (JSON format)
 
 ```json
 {
@@ -99,11 +101,11 @@ Body → raw → JSON:
 
 1. Login to get Access Token
 
-Endpoint:
+  - Method: POST
 
-POST /api/auth/login
+  - Endpoint: /api/auth/login
 
-Request Body: (JSON format)
+  - Request Body: (JSON format)
 
 ```json
 {
@@ -122,13 +124,13 @@ Response:
 ```
 2. Access Protected Resource
 
-Endpoint:
+  - Method: GET
 
-GET /api/subscriptions
+  - Endpoint: /api/subscriptions
 
-Headers:
+  - Headers:
  
-Authorization: Bearer <access_token>
+    Authorization: Bearer <access_token>
 
 This token should be copied directly from the login response and pasted into the Authorization tab in your API tool (e.g., Postman or Thunder Client) as a Bearer token.
 
